@@ -11,6 +11,16 @@ public class Note {
     private String description;
     private int priority;
 
+    public Note(String title, String description, int priority) {
+        this.title = title;
+        this.description = description;
+        this.priority = priority;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
     public int getId() {
         return id;
     }
