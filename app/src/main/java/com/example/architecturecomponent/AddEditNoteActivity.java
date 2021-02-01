@@ -22,7 +22,11 @@ import android.widget.Toast;
 
 import static android.webkit.WebChromeClient.FileChooserParams.parseResult;
 
-public class AddNoteActivity extends AppCompatActivity {
+public class AddEditNoteActivity extends AppCompatActivity {
+    public static final String EXTRA_REQUESTCODE =
+            "com.codinginflow.architectureexample.EXTRA_REQUESTCODE";
+    public static final String EXTRA_ID =
+            "com.codinginflow.architectureexample.EXTRA_ID";
     public static final String EXTRA_TITLE =
             "com.codinginflow.architectureexample.EXTRA_TITLE";
     public static final String EXTRA_DESCRIPTION =
@@ -36,13 +40,23 @@ public class AddNoteActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_note);
+
         editTextTitle = findViewById(R.id.edit_text_title);
         editTextDescription = findViewById(R.id.edit_text_description);
         numberPickerPriority = findViewById(R.id.number_picker_priority);
+
         numberPickerPriority.setMinValue(1);
         numberPickerPriority.setMaxValue(10);
+
         getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_close);
-        setTitle("Add Note");
+        Intent intent=getIntent();
+
+            editTextTitle.setText(intent.getStringExtra(EXTRA_TITLE));
+            editTextDescription.setText(intent.getStringExtra(EXTRA_DESCRIPTION));
+            numberPickerPriority.setValue(intent.getIntExtra(EXTRA_PRIORITY,1));
+
+            setTitle("Add Note");
+
     }
     private void saveNote() {
         String title = editTextTitle.getText().toString();
@@ -56,6 +70,11 @@ public class AddNoteActivity extends AppCompatActivity {
         data.putExtra(EXTRA_TITLE, title);
         data.putExtra(EXTRA_DESCRIPTION, description);
         data.putExtra(EXTRA_PRIORITY, priority);
+
+        int id =getIntent().getIntExtra(EXTRA_ID,-1);
+        if( id != -1){
+            data.putExtra(EXTRA_ID, id);
+        }
         setResult(RESULT_OK, data);
         finish();
     }
@@ -71,6 +90,8 @@ public class AddNoteActivity extends AppCompatActivity {
             case R.id.save_note:
                 saveNote();
                 return true;
+
+
             default:
                 return super.onOptionsItemSelected(item);
         }
